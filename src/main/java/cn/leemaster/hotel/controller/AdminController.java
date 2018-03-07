@@ -182,6 +182,16 @@ public class AdminController {
     }
 
     /**
+     * 新增房间类型信息
+     * @return
+     */
+    @RequestMapping(value = "room/type",method = RequestMethod.POST,consumes = "application/json")
+    public ResponseModel addType(@RequestBody JSONObject object){
+
+        return null;
+    }
+
+    /**
      * 新增房间信息 完成
      * {
      *     roomType : "1",
@@ -230,10 +240,15 @@ public class AdminController {
 
     /**
      * 更新房间信息
+     * {
+     *     roomStatus : 'Y',
+     *     roomFloor : '',
+     *     roomNum : ''
+     * }
      * @return
      */
-    @RequestMapping(value = "room/{roomId}",method = RequestMethod.PUT)
-    public ResponseModel updateRoom(){
+    @RequestMapping(value = "room/{roomId}",method = RequestMethod.PUT,consumes = "application/json")
+    public ResponseModel updateRoom(@RequestBody JSONObject object){
 
         return null;
     }
@@ -362,13 +377,24 @@ public class AdminController {
 
 
     /**
-     * 确认订单
+     * 确认订单 完成
+     * 前台开房的时候使用
      * @return
      */
-    @RequestMapping("order/confirm")
-    public ResponseModel confirmOrder(){
+    @RequestMapping("order/confirm/{userId}")
+    public ResponseModel confirmOrder(@PathVariable("userId") Integer userId){
 
-        return null;
+        orderRespository.modifyRoomStatus(userId);
+
+        ResponseModel model = new ResponseModel();
+
+        model.setResponseCode(200);
+
+        model.setResponseStatus("请求成功");
+
+        model.setResponseData(new HashMap<>());
+
+        return model;
     }
 
     /**
