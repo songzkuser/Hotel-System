@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "ht_room")
 public class Room {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "room_id")
     private Integer roomId;
 

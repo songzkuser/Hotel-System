@@ -1,5 +1,7 @@
 package cn.leemaster.hotel.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -39,6 +41,7 @@ public class User {
     private String userPhone;
 
     @Column(name = "user_password")
+    @JsonIgnore
     private String userPassword;
 
     @Column(name = "user_register")

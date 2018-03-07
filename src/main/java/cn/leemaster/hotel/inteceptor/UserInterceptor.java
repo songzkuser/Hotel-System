@@ -25,7 +25,12 @@ import java.util.HashMap;
 public class UserInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+//        String path = httpServletRequest.getRequestURI();
+//
+//        if (path.startsWith("/admin"))return true;
+
         String token = httpServletRequest.getParameter("token");
+
         if(token == null){
 
             httpServletResponse.setHeader("Content-Type","application/json;charset=utf-8");

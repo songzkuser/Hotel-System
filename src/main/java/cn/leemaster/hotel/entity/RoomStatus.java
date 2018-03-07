@@ -3,6 +3,8 @@ package cn.leemaster.hotel.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author leemaster
@@ -18,20 +20,20 @@ import java.util.Date;
 public class RoomStatus {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "status_id")
     private Long statusId;
 
-    @Column(name = "status_room")
+    @ManyToOne
+    @JoinColumn(name = "status_room")
     @NotNull
-    private Integer statusRoom;
+    private Room statusRoom;
 
-    @Column(name = "status_consumer")
-    @NotNull
-    private Integer statusConsumer;
+    @OneToMany(mappedBy = "consumerStatus")
+    private List<RoomConsumer> roomConsumers;
 
     @Column(name = "status_time")
-    private Date statusTime;
+    private Date statusTime = new Date();
 
     public Long getStatusId() {
         return statusId;
@@ -41,20 +43,20 @@ public class RoomStatus {
         this.statusId = statusId;
     }
 
-    public Integer getStatusRoom() {
+    public Room getStatusRoom() {
         return statusRoom;
     }
 
-    public void setStatusRoom(Integer statusRoom) {
+    public void setStatusRoom(Room statusRoom) {
         this.statusRoom = statusRoom;
     }
 
-    public Integer getStatusConsumer() {
-        return statusConsumer;
+    public List<RoomConsumer> getRoomConsumers() {
+        return roomConsumers;
     }
 
-    public void setStatusConsumer(Integer statusConsumer) {
-        this.statusConsumer = statusConsumer;
+    public void setRoomConsumers(List<RoomConsumer> roomConsumers) {
+        this.roomConsumers = roomConsumers;
     }
 
     public Date getStatusTime() {

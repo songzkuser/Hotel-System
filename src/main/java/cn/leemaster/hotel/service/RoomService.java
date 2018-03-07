@@ -1,6 +1,7 @@
 package cn.leemaster.hotel.service;
 
 import cn.leemaster.hotel.entity.Room;
+import cn.leemaster.hotel.entity.RoomConsumer;
 
 import java.util.List;
 
@@ -17,5 +18,5 @@ public interface RoomService {
 
     public List<Room> findRoomsAvialable();
 
-
+    public boolean roomIn(Integer roomId, List<RoomConsumer> consumers);
 }

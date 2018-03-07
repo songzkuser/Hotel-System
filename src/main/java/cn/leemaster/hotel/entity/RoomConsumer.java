@@ -1,5 +1,7 @@
 package cn.leemaster.hotel.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -16,8 +18,8 @@ import javax.validation.constraints.NotNull;
 @Table(name = "ht_room_consumer")
 public class RoomConsumer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comsumer_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "consumer_id")
     private Integer consumerId;
 
     @Column(name = "consumer_name")
@@ -27,6 +29,11 @@ public class RoomConsumer {
     @Column(name = "consumer_idcard")
     @NotNull
     private String consumerIdCard;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "consumer_status")
+    @JsonIgnore
+    private RoomStatus consumerStatus;
 
     public String getConsumerName() {
         return consumerName;
@@ -50,5 +57,13 @@ public class RoomConsumer {
 
     public void setConsumerId(Integer consumerId) {
         this.consumerId = consumerId;
+    }
+
+    public RoomStatus getConsumerStatus() {
+        return consumerStatus;
+    }
+
+    public void setConsumerStatus(RoomStatus consumerStatus) {
+        this.consumerStatus = consumerStatus;
     }
 }

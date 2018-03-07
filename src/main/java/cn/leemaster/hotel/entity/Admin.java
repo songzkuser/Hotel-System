@@ -34,7 +34,7 @@ public class Admin {
     private String adminPassword;
 
     @NotNull
-    @Column(name = "admin_tip")
+    @Column(name = "admin_tips")
     private String adminTips = "员工";
 
     @NotNull

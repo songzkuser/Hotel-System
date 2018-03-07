@@ -52,13 +52,22 @@ DROP TABLE IF EXISTS ht_room_consumer;
 CREATE TABLE ht_room_consumer(
   consumer_id int auto_increment primary key,
   consumer_name varchar(32) not null ,
-  consumer_idcard varchar(24) not null
+  consumer_idcard varchar(24) not null,
+  consumer_status BIGINT NOT NULL
 );
 
 DROP TABLE IF EXISTS ht_room_status;
 CREATE TABLE ht_room_status(
   status_id bigint primary key auto_increment,
   status_room int not null,
-  status_consumer int not null,
   status_time datetime default current_timestamp
+);
+
+DROP TABLE IF EXISTS ht_status_consumer;
+CREATE TABLE ht_status_consumer(
+  sc_id BIGINT AUTO_INCREMENT PRIMARY KEY ,
+  sc_status BIGINT NOT NULL ,
+  sc_consumer INT NOT NULL
 )
+
+
