@@ -1,14 +1,8 @@
 package cn.leemaster.hotel.controller;
 
 import cn.leemaster.hotel.ResponseModel;
-import cn.leemaster.hotel.dao.AdminRespository;
-import cn.leemaster.hotel.dao.ConsumerRespository;
-import cn.leemaster.hotel.dao.RoomRespository;
-import cn.leemaster.hotel.dao.StatusRespository;
-import cn.leemaster.hotel.entity.Admin;
-import cn.leemaster.hotel.entity.Room;
-import cn.leemaster.hotel.entity.RoomConsumer;
-import cn.leemaster.hotel.entity.RoomType;
+import cn.leemaster.hotel.dao.*;
+import cn.leemaster.hotel.entity.*;
 import cn.leemaster.hotel.service.RoomService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +41,12 @@ public class AdminController {
 
     @Autowired
     private ConsumerRespository consumerRespository;
+
+    @Autowired
+    private OrderRespository orderRespository;
+
+    @Autowired
+    private UserRespository userRespository;
 
     /**
      * 管理员登录控制器 完成
@@ -239,7 +239,7 @@ public class AdminController {
     }
 
     /**
-     * 修改房间信息
+     * 删除房间信息
      * @return
      */
     @RequestMapping(value = "room/{roomId}",method = RequestMethod.DELETE)
@@ -314,43 +314,111 @@ public class AdminController {
     }
 
     /**
-     * 查询当前未消费订单
+     * 查询当前未消费订单 完成
      * @return
      */
     @RequestMapping("order")
     public ResponseModel findAllOrders(){
+        ResponseModel model = new ResponseModel() ;
 
-        return null;
+        model.setResponseCode(200);
+
+        model.setResponseStatus("请求成功");
+
+        List<Order> orders = orderRespository.findAllByOrderStatus('N');
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("orders",orders);
+
+        model.setResponseData(map);
+
+        return model;
     }
 
     /**
-     * 查询当前已经消费订单
+     * 查询当前已经消费订单 完成
      * @return
      */
     @RequestMapping("order/consume")
     public ResponseModel findAllConsumeOrders(){
 
+        ResponseModel model = new ResponseModel() ;
+
+        model.setResponseCode(200);
+
+        model.setResponseStatus("请求成功");
+
+        List<Order> orders = orderRespository.findAllByOrderStatus('Y');
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("orders",orders);
+
+        model.setResponseData(map);
+
+        return model;
+    }
+
+
+    /**
+     * 确认订单
+     * @return
+     */
+    @RequestMapping("order/confirm")
+    public ResponseModel confirmOrder(){
+
         return null;
     }
 
     /**
-     * 取消订单
+     * 取消订单 完成
+     * 就直接删除用户订单就好了
      * @return
      */
     @RequestMapping("order/cancel/{orderId}")
-    public ResponseModel cancelOrder(){
+    public ResponseModel cancelOrder(@PathVariable("orderId")Long orderId){
 
-        return null;
+        ResponseModel model = new ResponseModel();
+
+        orderRespository.delete(orderId);
+
+        model.setResponseCode(200);
+
+        model.setResponseStatus("请求成功");
+
+        model.setResponseData(new HashMap<>());
+
+        return model;
     }
 
     /**
-     * 按照用户帐号查询用户信息
+     * 按照用户帐号查询用户信息 完成
+     * 查询用户基本信息 和 他的所有订单
      * @return
      */
     @RequestMapping("user/{userId}")
-    public ResponseModel findUserById(){
+    public ResponseModel findUserById(@PathVariable("userId") Integer userId){
 
-        return null;
+        User user = userRespository.findOne(userId);
+
+        List<Order> orders = orderRespository.findOrderByUserId(userId);
+
+        ResponseModel model = new ResponseModel();
+
+        model.setResponseCode(200);
+
+        model.setResponseStatus("请求成功");
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("user",user);
+
+        map.put("orders",orders);
+
+        model.setResponseData(map);
+
+        return model;
     }
 
 

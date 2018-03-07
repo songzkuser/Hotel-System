@@ -1,6 +1,7 @@
 package cn.leemaster.hotel.dao;
 
 import cn.leemaster.hotel.entity.Order;
+import cn.leemaster.hotel.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -27,5 +28,13 @@ public interface OrderRespository extends JpaRepository<Order,Long> {
     @Modifying(clearAutomatically = true)
     @Query("update Order o set o.orderStatus = 'Y' where o.orderUser = :userId")
     public int modifyRoomStatus(@Param("userId")Integer userId);
+
+
+    @Query("select o from Order o where o.orderStatus = :status")
+    public List<Order> findAllByOrderStatus(@Param("status")Character status);
+
+
+    @Query("select  o from Order o where o.orderUser.userId = :userId")
+    public List<Order> findAllByOrderUser(@Param("userId") Integer userId);
 
 }
