@@ -40,6 +40,9 @@ public class AdminController {
     private RoomRespository roomRespository;
 
     @Autowired
+    private TypeRespository typeRespository;
+
+    @Autowired
     private ConsumerRespository consumerRespository;
 
     @Autowired
@@ -182,13 +185,33 @@ public class AdminController {
     }
 
     /**
-     * 新增房间类型信息
+     * 新增房间类型信息 完成
+     * {
+     *     typeName : "",
+     *
+     * }
      * @return
      */
     @RequestMapping(value = "room/type",method = RequestMethod.POST,consumes = "application/json")
     public ResponseModel addType(@RequestBody JSONObject object){
 
-        return null;
+        String typeName = object.getString("typeName");
+
+        RoomType type = new RoomType();
+
+        type.setTypeName(typeName);
+
+        typeRespository.save(type);
+
+        ResponseModel model = new ResponseModel();
+
+        model.setResponseCode(200);
+
+        model.setResponseStatus("请求成功");
+
+        model.setResponseData(new HashMap<>());
+
+        return model;
     }
 
     /**
@@ -223,6 +246,8 @@ public class AdminController {
 
         roomRespository.save(room);
 
+        typeRespository.modifyTypeNum(room.getRoomType().getTypeId());
+
         ResponseModel model = new ResponseModel();
 
         model.setResponseCode(200);
@@ -243,14 +268,38 @@ public class AdminController {
      * {
      *     roomStatus : 'Y',
      *     roomFloor : '',
-     *     roomNum : ''
+     *     roomType : '',
+     *     roomNum : '',
+     *     roomId : ''
      * }
      * @return
      */
     @RequestMapping(value = "room/{roomId}",method = RequestMethod.PUT,consumes = "application/json")
     public ResponseModel updateRoom(@RequestBody JSONObject object){
 
-        return null;
+        Character roomStatus = object.getString("roomStatus").charAt(0);
+
+        Integer roomFloor = object.getInteger("roomFloor");
+
+        Integer roomNum = object.getInteger("roomNum");
+
+        Integer roomType = object.getInteger("roomType");
+
+        Integer roomId = object.getInteger("roomId");
+
+        roomRespository.modifyRoomInfo(roomId,roomType,roomStatus,roomFloor,roomNum);
+
+        typeRespository.modifyTypeNum(roomType);
+
+        ResponseModel model = new ResponseModel();
+
+        model.setResponseCode(200);
+
+        model.setResponseStatus("请求成功");
+
+        model.setResponseData(new HashMap<>());
+
+        return model;
     }
 
     /**
@@ -267,6 +316,7 @@ public class AdminController {
      * 办理房间入住信息 完成
      *  {
      *     roomId : "302",
+     *     typeId : ''
      *     roomConsumers : [
      *      {
      *          consumerName : "leemaster",
@@ -278,6 +328,7 @@ public class AdminController {
      *      }
      *     ]
      * }
+     * //TODO 需要做一下 关联的 房间类型的 减少
      * @return
      */
     @RequestMapping(value = "room/enter",method = RequestMethod.POST,consumes = "application/json")
@@ -301,6 +352,8 @@ public class AdminController {
 
         roomService.roomIn(roomId,consumers);
 
+        typeRespository.subTypeNum(object.getInteger("typeId"));
+
         Map<String,Object> map = new HashMap<>();
 
         ResponseModel model = new ResponseModel();
@@ -319,13 +372,34 @@ public class AdminController {
     }
 
     /**
-     * 办理退房手续
+     * 办理退房手续 完成
+     * {
+     *
+     * }
      * @return
      */
-    @RequestMapping(value = "room/quit/{roomId}",method = RequestMethod.DELETE)
-    public ResponseModel quitRoom(){
+    @RequestMapping(value = "room/quit/{roomId}/{typeId}/{statusId}",method = RequestMethod.DELETE)
+    public ResponseModel quitRoom(@PathVariable("roomId") Integer roomId,
+                                  @PathVariable("typeId") Integer typeId,
+                                  @PathVariable("statusId") Long statusId){
 
-        return null;
+        ResponseModel model = new ResponseModel();
+
+        model.setResponseCode(200);
+
+        model.setResponseStatus("请求成功");
+
+        statusRespository.deleteAllByRoomId(roomId);
+
+        typeRespository.modifyTypeNum(typeId);
+
+        roomRespository.modifyRoomStatus(roomId,'Y');
+
+        consumerRespository.deleteByStatusId(statusId);
+
+        model.setResponseData(new HashMap<>());
+
+        return model;
     }
 
     /**

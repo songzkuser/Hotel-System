@@ -27,7 +27,7 @@ public class RoomType {
 
     @Column(name = "type_pic")
     @NotNull
-    private String typePic;
+    private String typePic = "/room.jpg";
 
     @Column(name = "type_num")
     @NotNull

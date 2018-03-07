@@ -30,4 +30,15 @@ public interface RoomRespository extends JpaRepository<Room,Integer> {
     @Query("select r from Room r where r.roomType.typeId = :typeId")
     public List<Room> findRoomByRoomType(@Param("typeId") Integer typeId);
 
+
+    @Modifying(clearAutomatically = true)
+    @Query("update Room r set r.roomType.typeId = :typeId , r.roomStatus = :status , r.roomFloor = :roomFloor, r.roomNum = :roomNum where r.roomId = :roomId")
+    public int modifyRoomInfo(
+            @Param("roomId") Integer roomId,
+            @Param("roomType")Integer typeId,
+            @Param("roomStatus") Character status,
+            @Param("roomFloor")Integer roomFloor,
+            @Param("roomNum") Integer roomNum
+    );
+
 }
